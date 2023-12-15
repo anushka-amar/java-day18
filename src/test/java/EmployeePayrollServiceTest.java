@@ -26,17 +26,17 @@ public class EmployeePayrollServiceTest {
         Assert.assertEquals(3, entries);
     }
 
-    @Test
-    public void givenFileOnReadingFromFileShouldMatchEmployeeCount(){
-        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-        long entries = employeePayrollService.readEmployeePayrollData(FILE_IO);
-        Assert.assertEquals(3, entries);
-    }
-
 //    @Test
-//    public void givenEmployeePayrollINDB_WhenRetrieved_ShouldMatchEmployeeCount(){
+//    public void givenFileOnReadingFromFileShouldMatchEmployeeCount(){
 //        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//        List<EmployeePayrollData> employeePayrollDataList = employeePayrollService.readEmployeePayrollData(DB_IO);
-//        Assert.assertEquals(3, employeePayrollDataList.size());
+//        long entries = employeePayrollService.readEmployeePayrollData(FILE_IO);
+//        Assert.assertEquals(3, entries);
 //    }
+
+    @Test
+    public void givenEmployeePayrollINDB_WhenRetrieved_ShouldMatchEmployeeCount(){
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(DB_IO);
+        Assert.assertEquals(3, employeePayrollData.size());
+    }
 }

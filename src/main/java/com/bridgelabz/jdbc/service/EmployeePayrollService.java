@@ -36,13 +36,13 @@ public class EmployeePayrollService {
         employeePayrollList.add(new EmployeePayrollData(id, name, salary)); //asking for the emp details and creating object out of it and adding to list
     }
 
-//    public List<EmployeePayrollData> readEmployeePayrollData(IOService ioService){
-//        if(ioService.equals(IOService.DB_IO)){
-//            this.employeePayrollList = new EmployeePayrollDBService().readData();
-//        }
-//        return this.employeePayrollList;
-//    }
-//
+    public List<EmployeePayrollData> readEmployeePayrollData(IOService ioService){
+        if(ioService.equals(IOService.DB_IO)){
+            this.employeePayrollList = new EmployeePayrollDBService().readData();
+        }
+        return this.employeePayrollList;
+    }
+
     public void writeEmployeePayrollData(IOService ioService){
         if(ioService.equals(IOService.CONSOLE_IO)){
             System.out.println("\nWriting Employee Payroll roaster to Console\n"+ employeePayrollList);
@@ -52,13 +52,12 @@ public class EmployeePayrollService {
         }
     }
 
-
-    public long readEmployeePayrollData(IOService ioService){
-        if(ioService.equals(IOService.FILE_IO)){
-            this.employeePayrollList = new EmployeePayrollServiceFileIOService().readData();
-        }
-        return employeePayrollList.size();
-    }
+//    public long readEmployeePayrollData(IOService ioService){
+//        if(ioService.equals(IOService.FILE_IO)){
+//            this.employeePayrollList = new EmployeePayrollServiceFileIOService().readData();
+//        }
+//        return employeePayrollList.size();
+//    }
 
     public void printData(IOService ioService){
         if(ioService.equals(IOService.FILE_IO)){
