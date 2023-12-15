@@ -12,6 +12,7 @@ import static com.bridgelabz.jdbc.service.EmployeePayrollService.IOService.FILE_
 public class EmployeePayrollServiceTest {
     Assertions Assert;
 
+    /* File IO Test */
     @Test
     public void given3EmployeesWhenWrittenToFileShouldMatchEmployeeEntries(){
         EmployeePayrollData[] arrayOfEmp = {
@@ -33,10 +34,22 @@ public class EmployeePayrollServiceTest {
 //        Assert.assertEquals(3, entries);
 //    }
 
+    /* UC2 JDBC */
     @Test
     public void givenEmployeePayrollINDB_WhenRetrieved_ShouldMatchEmployeeCount(){
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(DB_IO);
         Assert.assertEquals(3, employeePayrollData.size());
+    }
+
+    /* UC3 JDBC */
+    @Test
+    public void givenNewSalaryForEmployee_WhenUpdated_ShouldUpdateInDB(){
+
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(DB_IO);
+        employeePayrollService.updateEmployeeSalary("Terisa", 4000000.0);
+        boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
+        Assert.assertTrue(result);
     }
 }
