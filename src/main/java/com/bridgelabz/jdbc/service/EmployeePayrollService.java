@@ -2,11 +2,13 @@ package com.bridgelabz.jdbc.service;
 
 import com.bridgelabz.jdbc.entity.EmployeePayrollData;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class EmployeePayrollService {
+
 
     public enum IOService {CONSOLE_IO, FILE_IO, DB_IO}
     private List<EmployeePayrollData> employeePayrollList;
@@ -46,6 +48,16 @@ public class EmployeePayrollService {
             this.employeePayrollList = employeePayrollDBService.readData();
         }
         return this.employeePayrollList;
+    }
+
+
+    /* method to retrieve employees joining in a particular date */
+    public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService,
+                                                                     LocalDate startDate, LocalDate endDate) {
+        if(ioService.equals(IOService.DB_IO)){
+            return employeePayrollDBService.getEmployeePayrollForDateRange(startDate, endDate);
+        }
+        return null;
     }
 
     /* method to check sync of the object w DB */

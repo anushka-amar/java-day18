@@ -38,19 +38,41 @@ public class EmployeePayrollDBService {
     /* UC2 - retrieve employee payroll table from database */
     public List<EmployeePayrollData> readData() {
         String sql = "SELECT * FROM employee_payroll; ";
+        return this.getEmployeePayrollDataUsingDB(sql);
+    }
+
+
+    /* UC-3 update salary */
+    public int updateEmployeeData(String name, double salary) {
+        return this.updateEmployeeDataUsingStatement(name, salary);
+    }
+
+    public int updateEmployeeDataUsingStatement(String name, double salary) {
+        String sql = String.format("Update employee_payroll set salary = %.2f where name = '%s", salary, name);
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            return statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    /* UC-5 method to retrieve employees starting at a particular date */
+    public List<EmployeePayrollData> getEmployeePayrollForDateRange(LocalDate startDate, LocalDate endDate) {
+        String sql = String.format("SELECT * FROM employee_payroll WHERE start BETWEEN '%s' AND '%s'",
+                Date.valueOf(startDate), Date.valueOf(endDate));
+
+        return this.getEmployeePayrollDataUsingDB(sql);
+    }
+
+    private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) {
         List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
         try (Connection connection = this.getConnection()) {
             Statement statement = connection.createStatement(); // this statement is used to execute our sql queries
             ResultSet resultSet = statement.executeQuery(sql); //executing the query on statement and adding to result
-
-            while (resultSet.next()) { //enumerating through the result set and populating our  employeePayroll object
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                double salary = resultSet.getDouble("salary");
-                LocalDate startDate = resultSet.getDate("start").toLocalDate();
-                employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate));
-            }
-            connection.close(); //if we close the connection we don't need to close the statement or resultSet separately
+            employeePayrollList = this.getEmployeePayrollData(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -98,19 +120,5 @@ public class EmployeePayrollDBService {
         }
     }
 
-    /* UC-3 update salary */
-    public int updateEmployeeData(String name, double salary) {
-        return this.updateEmployeeDataUsingStatement(name, salary);
-    }
 
-    public int updateEmployeeDataUsingStatement(String name, double salary) {
-        String sql = String.format("Update employee_payroll set salary = %.2f where name = '%s", salary, name);
-        try (Connection connection = this.getConnection()) {
-            Statement statement = connection.createStatement();
-            return statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
 }
