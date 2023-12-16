@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.bridgelabz.jdbc.service.EmployeePayrollService.IOService.DB_IO;
 import static com.bridgelabz.jdbc.service.EmployeePayrollService.IOService.FILE_IO;
@@ -63,5 +64,14 @@ public class EmployeePayrollServiceTest {
         LocalDate endDate = LocalDate.now();
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollForDateRange(DB_IO, startDate, endDate);
         Assert.assertEquals(3, employeePayrollData.size());
+    }
+
+    /* UC6 JDBC */
+    public void givenPayrollData_WhenAverageSalaryRetrievedByGender_ShouldReturnProperValue(){
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmployeePayrollData(DB_IO);
+        Map<String, Double> averageSalaryByGender = employeePayrollService.readAverageSalaryByGender(DB_IO);
+        Assert.assertTrue(averageSalaryByGender.get("M").equals(200000.00)&&
+                averageSalaryByGender.get("F").equals(5000000.00));
     }
 }

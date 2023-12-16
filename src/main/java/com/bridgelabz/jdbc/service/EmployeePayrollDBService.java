@@ -6,7 +6,9 @@ import java.net.ConnectException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollDBService {
 
@@ -67,6 +69,25 @@ public class EmployeePayrollDBService {
         return this.getEmployeePayrollDataUsingDB(sql);
     }
 
+    /* UC-6 find average salary by gender */
+    public Map<String, Double> getAverageSalaryByGender() {
+     String sql = "SELECT gender, AVG(salary) as avg_salary FROM employee_payroll GROUP BY gender;";
+     Map<String, Double> genderToAverageSalaryMap = new HashMap<>();
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement(); // this statement is used to execute our sql queries
+            ResultSet resultSet = statement.executeQuery(sql); //executing the query on statement and adding to result
+            while (resultSet.next()){
+                String gender = resultSet.getString("gender");
+                double salary = resultSet.getDouble("avg_salary");
+                genderToAverageSalaryMap.put(gender, salary);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return genderToAverageSalaryMap;
+    }
+
+    /* method to execute sql queries and populate our list */
     private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) {
         List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
         try (Connection connection = this.getConnection()) {
@@ -119,6 +140,5 @@ public class EmployeePayrollDBService {
             e.printStackTrace();
         }
     }
-
 
 }

@@ -5,10 +5,10 @@ import com.bridgelabz.jdbc.entity.EmployeePayrollData;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class EmployeePayrollService {
-
 
     public enum IOService {CONSOLE_IO, FILE_IO, DB_IO}
     private List<EmployeePayrollData> employeePayrollList;
@@ -30,7 +30,7 @@ public class EmployeePayrollService {
         employeePayrollService.writeEmployeePayrollData(IOService.FILE_IO);
     }
 
-    /* method to read emp data from
+    /* UC-2 method to read emp data from
        console and adds to the list */
     public void readEmployeePayrollData(Scanner consoleInputReader){
         System.out.println("Enter Employee ID: ");
@@ -42,28 +42,12 @@ public class EmployeePayrollService {
         employeePayrollList.add(new EmployeePayrollData(id, name, salary)); //asking for the emp details and creating object out of it and adding to list
     }
 
-    /* method to read and populate our object */
+    /* UC-2 method to read and populate our object */
     public List<EmployeePayrollData> readEmployeePayrollData(IOService ioService){
         if(ioService.equals(IOService.DB_IO)){
             this.employeePayrollList = employeePayrollDBService.readData();
         }
         return this.employeePayrollList;
-    }
-
-
-    /* method to retrieve employees joining in a particular date */
-    public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService,
-                                                                     LocalDate startDate, LocalDate endDate) {
-        if(ioService.equals(IOService.DB_IO)){
-            return employeePayrollDBService.getEmployeePayrollForDateRange(startDate, endDate);
-        }
-        return null;
-    }
-
-    /* method to check sync of the object w DB */
-    public boolean checkEmployeePayrollInSyncWithDB(String name) {
-        List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
-        return employeePayrollList.get(0).equals(getEmployeePayrollData(name));
     }
 
     /* UC-3 update salary */
@@ -76,6 +60,31 @@ public class EmployeePayrollService {
             employeePayrollData.salary = salary;
         }
     }
+
+
+    /* UC-5 method to retrieve employees joining in a particular date */
+    public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService,
+                                                                     LocalDate startDate, LocalDate endDate) {
+        if(ioService.equals(IOService.DB_IO)){
+            return employeePayrollDBService.getEmployeePayrollForDateRange(startDate, endDate);
+        }
+        return null;
+    }
+
+    /* UC-6 method to find avg of salary */
+    public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
+        if(ioService.equals(IOService.DB_IO)){
+            return employeePayrollDBService.getAverageSalaryByGender();
+        }
+        return null;
+    }
+
+    /* method to check sync of the object w DB */
+    public boolean checkEmployeePayrollInSyncWithDB(String name) {
+        List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
+        return employeePayrollList.get(0).equals(getEmployeePayrollData(name));
+    }
+
 
     /* converts list into stream and filters
     * by name, if null is returned we don't update salary
