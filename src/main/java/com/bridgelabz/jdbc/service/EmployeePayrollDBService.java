@@ -87,6 +87,28 @@ public class EmployeePayrollDBService {
         return genderToAverageSalaryMap;
     }
 
+    /* UC-7 ability to add new employee to DB */
+
+    public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate start, String gender) {
+        int employeeId = -1;
+        EmployeePayrollData employeePayrollData = null;
+        String sql = String.format("INSERT INTO employee_payroll (name, gender, salary, start)"+
+                " VALUE ( '%s', '%s', '%s', '%s' );", name, gender, salary, Date.valueOf(start));
+
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+            if(rowAffected == 1){
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if(resultSet.next()) employeeId = resultSet.getInt(1);
+            }
+            employeePayrollData = new EmployeePayrollData(employeeId, name, salary, start);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return employeePayrollData;
+    }
+
     /* method to execute sql queries and populate our list */
     private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) {
         List<EmployeePayrollData> employeePayrollList = new ArrayList<>();

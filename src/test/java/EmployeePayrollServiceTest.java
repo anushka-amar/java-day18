@@ -67,11 +67,22 @@ public class EmployeePayrollServiceTest {
     }
 
     /* UC6 JDBC */
+    @Test
     public void givenPayrollData_WhenAverageSalaryRetrievedByGender_ShouldReturnProperValue(){
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         employeePayrollService.readEmployeePayrollData(DB_IO);
         Map<String, Double> averageSalaryByGender = employeePayrollService.readAverageSalaryByGender(DB_IO);
         Assert.assertTrue(averageSalaryByGender.get("M").equals(200000.00)&&
                 averageSalaryByGender.get("F").equals(5000000.00));
+    }
+
+    /* UC7 JDBC */
+    @Test
+    public void givenNewEmployee_WhenAdded_ShouldSyncWithDB(){
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmployeePayrollData(DB_IO);
+        employeePayrollService.addEmployeeToPayroll("Mark",6000000.00, LocalDate.now(), "M");
+        boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+        Assert.assertTrue(result);
     }
 }

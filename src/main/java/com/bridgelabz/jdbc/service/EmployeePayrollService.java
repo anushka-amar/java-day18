@@ -79,6 +79,11 @@ public class EmployeePayrollService {
         return null;
     }
 
+    /* UC-7 add new employee to DB */
+    public void addEmployeeToPayroll(String name, double salary, LocalDate start, String gender) {
+        employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, start, gender));
+    }
+
     /* method to check sync of the object w DB */
     public boolean checkEmployeePayrollInSyncWithDB(String name) {
         List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
